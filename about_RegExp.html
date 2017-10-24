@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>关于正则表达式及其用法</title>
+</head>
+<body>
+
+<textarea id="textarea" cols="30" rows="10"></textarea>
+<input id="btn" type="submit">
+
+<script type="text/javascript">
+    //创建正则表达式
+
+    /*
+    * 使用构造函数的形式创建一个正则表达
+    *  参数1.
+    *       正则表达式的具体内容 (字符串或/正则内容/) 若是以字符串的形式创建那么当我们在某种情况下需要对字符串中的内容进行转义;
+    *
+    *       当使用构造函数创造正则对象时，需要常规的字符转义规则（在前面加反斜杠 \）。比如，以下是等价的：
+    *       var re = new RegExp("\\w+");
+    *       var re = /\w+/;
+    *
+    *
+    *       new RegExp('ab+c', 'i');
+    *       new RegExp(/ab+c/, 'i');
+    *
+    *
+    *  参数2(可不传,如果不传则取默认值)(字符串)
+    *       正则表达式的匹配模式:
+    *           i 不区分大小写
+    *           g 全局匹配 : 指会匹配整个串 而不是在找到符合的之后就返回
+    *           m
+    *
+    * 使用字面量形式创建一个正则
+    *       /ab+c/i
+    *
+    *
+    *
+    *   当表达式被赋值时，字面量形式提供正则表达式的编译（compilation）状态，
+    *   当正则表达式保持为常量时使用字面量。
+    *   例如当你在循环中使用字面量构造一个正则表达式时，正则表达式不会在每一次迭代中都被重新编译（recompiled）。
+    *
+    *   而正则表达式对象的构造函数，如 new RegExp('ab+c') 提供了正则表达式运行时编译（runtime compilation）。
+    *   如果你知道正则表达式模式将会改变，或者你事先不知道什么模式，而是从另一个来源获取，如用户输入，这些情况都可以使用构造函数。
+    *       指的就是构造函数的形式可以传入一个变量 而字面量的形式不能传入变量
+    *
+    *
+    *
+    *
+    *
+    *       . 匹配任意字符 (除了空)
+    *       /d 匹配任意的阿拉伯数字 等同于[0-9]
+    *       /D 匹配任意除开阿拉伯数字的字符 等同于[^0-9]
+    *       /w 匹配任意字母数字_ 等同于[A-z0-9_]
+    *       /W 匹配除了任意数字字母_以外的字符 等同于 [^A-z0-9_]
+    *       /s 匹配一个空白符(包括空格,制表符,换页符,换行符等)
+    *       \S 匹配一个非空白符
+    *
+    */
+    /*var textareaNode = document.getElementById("textarea");
+    var btnNode = document.getElementById("btn");
+    var reg = new RegExp("\.");
+    var reg2 = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]+))$/;
+    var str = "";*/
+
+    btnNode.onclick = function () {
+        str = textareaNode.value;
+//        console.log(str.length);
+        //console.log(str.split(reg2));
+//        console.log(reg2.test(str));
+        console.log(str.match(reg2));
+    };
+    console.log(reg);
+
+</script>
+</body>
+</html>

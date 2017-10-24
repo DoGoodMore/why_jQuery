@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<base href="http://localhost:8080" target="_blank">-->
+</head>
+<body>
+<div>
+    <p>
+        <a href="" id="btn">点我一下试试</a>
+        <a href="" class="link">我的类名是link
+
+        </a>
+
+    </p>
+    <div class="test1">
+        <div class="test2" id="btn2">
+            hahahahahah
+        </div>
+    </div>
+    <div class="test2">
+        我不是context中的test2
+    </div>
+    <iframe srcdoc='<iframe srcdoc="<p>hello world</p>" src="#" frameborder="1" id="test3"></iframe>' src="#" frameborder="1" id="test"></iframe>
+</div>
+<!--<script src="jquery-3.2.1.js"></script>-->
+<script>
+
+    var reg = "aabbccaabbccaabbccaabbcc";
+    funescape = function( _, escaped, escapedWhitespace ) {//定义funescape方法 1295处引用
+        var high = "0x" + escaped - 0x10000;//如果传入的是转数字为NaN的类型 那么high的值就为NaN
+        // NaN means non-codepoint 译 : NaN表示非码点
+        // Support: Firefox<24 译 : 支持火狐24以下
+        // Workaround erroneous numeric interpretation of +"0x" 译 : 解决方法+“0x”的错误数字解释
+        return high !== high || escapedWhitespace ?//如果转为的值为NaN那么返回true
+            //如果high为NaN那么进入下面判断 对传入的第三个参数进行判定
+            //如果传入的第三个参数为true 那么就返回传入的第二个参数
+
+            escaped :
+            //如果第三个参数传入为false 就对high的值进行判断
+            high < 0 ?
+                //如果其小于0 那就返回一个字符串 如果大于0就返回两个字符串
+                // BMP codepoint 译 : BMP代码点
+                String.fromCharCode( high + 0x10000 ) :
+                // Supplemental Plane codepoint (surrogate pair) 译 : 补充平面代码点（代理对）
+                String.fromCharCode( high >> 10 | 0xD800, high & 0x3FF | 0xDC00 );
+    };
+    var Reg = /(a)(ab)bcc/g;
+    reg = reg.replace(Reg, funescape);
+    console.log(reg);
+    /* var testNode = $(".test1")[0];
+    //testNode.find("div").css("color", "red");
+    var ifNode = document.getElementById("test");
+    var parentNode = testNode.ownerDocument;
+    var documentNode = document.implementation.createHTMLDocument("test", "test2");
+    console.log(ifNode.contentDocument.defaultView);
+    console.log(ifNode.contentDocument.defaultView.top);
+    console.log(ifNode.contentDocument.defaultView.top === ifNode.contentDocument.defaultView);*/
+    //ifrNode.appendChild(documentNode);
+    //------------------------------------
+    // Match "quick brown" followed by "jumps", ignoring characters in between
+    // Remember "brown" and "jumps"
+    // Ignore case
+    /*var re = /quick\s(brown).+?(jumps)/ig;
+    var result = re.exec('The Quick Brown Fox Jumps Over The Lazy Dog');
+    console.log(result);*/
+    //----------------------------------------
+
+
+    //------------------------------------
+    /*var str = ' <div></div> <p> <a href="$">suiqu Game</a> </p> aslkdjalksd';
+     var reg = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]+))$/;
+     var result = reg.exec(str);
+     console.log(result);
+     */
+    //------------------------------------
+    /*var obj = {};
+    var str = {};
+    var objStr = obj.toString();
+    console.log(objStr);*/
+
+
+
+
+
+
+    //=======================================//
+
+
+   /*var class2type = {},
+       toString = class2type.toString,
+       Arr = "Boolean Number String Function Array Date RegExp Object Error Symbol".split( " " );
+       type = function( obj ) {
+        if ( obj == null ) {
+            return obj + "";
+        }
+
+        return typeof obj === "object" || typeof obj === "function" ?
+            class2type[ toString.call( obj ) ] || "object" :
+            typeof obj;
+        };
+        function test(test) {
+            console.log(test);
+        }
+        for(var i = 0;i < Arr.length;i++){
+            class2type[ "[object " + Arr[i] + "]" ] = Arr[i].toLowerCase();
+        }
+    console.log(type(toString));*/
+    /*var headNode = document.implementation.createHTMLDocument( "" ).head;
+    console.log(headNode);
+    var styleNode = document.createElement("style");
+    styleNode.innerHTML = "*{color : red;}";
+    headNode.appendChild(styleNode);*/
+
+    /*var support = {};
+    support.createHTMLDocument = ( function() {
+        var body = document.implementation.createHTMLDocument( "" ).body;
+        body.innerHTML = "<form></form><form></form>";
+        return body.childNodes.length === 2;
+    } )();
+    console.log(support.createHTMLDocument);*/
+
+    /*var body2 = document.implementation.createHTMLDocument("");
+    body2.innerHTML = "<form></form><form></form>";
+    console.log(body2);*/
+    /*var reg = /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i
+    var str = "<br />";
+    console.log(reg.test(str));
+    console.log(str.match(reg));
+    console.log(!![]);*/
+    /* var test = document.implementation.createHTMLDocument( "" );
+    console.log(location.href);*/
+
+
+    //=============================================//
+   /* var keepScripts = true;
+    var scripts = !keepScripts && [];
+    console.log(scripts);*/
+
+    //==========================================//
+    /*$(function () {
+        var btnNode = $("#btn");
+        var linkNode = $(".link");
+        console.log(linkNode);
+        linkNode.click(function () {
+            alert(111);
+            $(this).css("color", "red");
+        });
+        btnNode.click(function () {
+            alert(1111);
+        });
+        var test1Node = $(".test1");
+        var test2Node = $(".test2", test1Node);
+        console.log(test2Node);
+    });*/
+
+    /*var btnNode = document.getElementById("btn2");
+    console.log(typeof btnNode);*/
+//    var textNode = $("<div id='test2'>我是新创建的div</div>");
+/*    var reg = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\0>\x20\t\r\n\f]*)[^>]*)\/>/gi;
+    var str = "<span/>>span> ";
+    console.log(reg.exec(str));*/
+//    console.log(document.documentElement)
+
+    /*var obj = {};
+    obj[""] = "test";
+    console.log(obj[""]);*/
+
+    /*var class2type = {};
+    jQuery.each( "Boolean Number String Function Array Date RegExp Object Error Symbol".split( " " ),//给class2type添加属性和方法 用于jQuery.type方法中使用 即对输入不同的参数返回不同的类型
+        function( i, name ) {
+            /!*
+             *
+             * [object Array]:"array"
+             * [object Boolean]:"boolean"
+             * [object Date]:"date"
+             * [object Error]:"error"
+             * [object Function]:"function"
+             * [object Number]:"number"
+             * [object Object]:"object"
+             * [object RegExp]:"regexp"
+             * [object String]:"string"
+             * [object Symbol]:"symbol"
+             *
+             * *!/
+            console.log(i, name);
+            class2type[ "[object " + name + "]" ] = name.toLowerCase();
+        } );
+    console.log(class2type);*/
+
+
+
+
+
+
+
+
+
+
+    /*console.log($());
+    console.log($().__proto__);*/
+</script>
+
+<!--<script>
+    document.write ("typeof(1): "+typeof(1)+"<br>");
+    document.write ("typeof(NaN): "+typeof(NaN)+"<br>");
+    document.write ("typeof(Number.MIN_VALUE): "+typeof(Number.MIN_VALUE)+"<br>")
+    document.write ("typeof(Infinity): "+typeof(Infinity)+"<br>")
+    document.write ("typeof(\"123\"): "+typeof("123")+"<br>")
+    document.write ("typeof(true): "+typeof(true)+"<br>")
+    document.write ("typeof(window): "+typeof(window)+"<br>")
+    document.write ("typeof(document): "+typeof(document)+"<br>")
+    document.write ("typeof(null): "+typeof(null)+"<br>")
+    document.write ("typeof(eval): "+typeof(eval)+"<br>")
+    document.write ("typeof(Date): "+typeof(Date)+"<br>")
+    document.write ("typeof(sss): "+typeof(sss)+"<br>")
+    document.write ("typeof(undefined): "+typeof(undefined)+"<br>")
+</script>-->
+</body>
+</html>
