@@ -599,14 +599,14 @@ var i,
 	hasDuplicate,
 
 	// Local document vars
-	setDocument,//1588
-	document,
+	setDocument,//1588  840调用
+	document,//838有引用
 	docElem,//1275出引用 1459引用
 	documentIsHTML,//1305处引用
-	rbuggyQSA,
+	rbuggyQSA,//924处引用
 	rbuggyMatches,//1426处引用
-	matches,
-	contains,
+	matches, //1593处引用
+	contains, //890处引用
 
 	// Instance-specific data 译 : 实例特定的数据
 	expando = "sizzle" + 1 * new Date(),//1276处引用
@@ -615,7 +615,7 @@ var i,
 	done = 0,
 	classCache = createCache(),
 	tokenCache = createCache(),
-	compilerCache = createCache(),
+	compilerCache = createCache(),//923引用
 	sortOrder = function( a, b ) {
 		if ( a === b ) {
 			hasDuplicate = true;
@@ -707,7 +707,9 @@ var i,
 	//除了{开头可匹配多个 后面的内容必须是{ [native x
 
 	// Easily-parseable/retrievable ID or TAG or CLASS selectors
-	rquickExpr = /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,
+	//译 : ↑ 易于解析/可检索的ID或TAG或CLASS选择器
+	rquickExpr = /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,//851处引用
+	//用于检测#xxx 或 xxxx 或.xxxx
 
 	rsibling = /[+~]/,
 
@@ -741,22 +743,25 @@ var i,
 				String.fromCharCode( high >> 10 | 0xD800, high & 0x3FF | 0xDC00 );
 	},
 
-	// CSS string/identifier serialization
+	// CSS string/identifier serialization 译 : CSS字符串/标识符序列化
 	// https://drafts.csswg.org/cssom/#common-serializing-idioms
-	rcssescape = /([\0-\x1f\x7f]|^-?\d)|^-$|[^\0-\x1f\x7f-\uFFFF\w-]/g,
+	rcssescape = /([\0-\x1f\x7f]|^-?\d)|^-$|[^\0-\x1f\x7f-\uFFFF\w-]/g,//949引用
 	fcssescape = function( ch, asCodePoint ) {
 		if ( asCodePoint ) {
 
 			// U+0000 NULL becomes U+FFFD REPLACEMENT CHARACTER
+			//译 : ↑ U + 0000 NULL变为U + FFFD REPLACEMENT CHARACTER
 			if ( ch === "\0" ) {
 				return "\uFFFD";
 			}
 
 			// Control characters and (dependent upon position) numbers get escaped as code points
+			//译 : ↑ 控制字符和（取决于位置）数字作为代码点被转义
 			return ch.slice( 0, -1 ) + "\\" + ch.charCodeAt( ch.length - 1 ).toString( 16 ) + " ";
 		}
 
 		// Other potentially-special ASCII characters get backslash-escaped
+		//译 : 其他可能特殊的ASCII字符得到反斜杠转义
 		return "\\" + ch;
 	},
 
@@ -804,60 +809,92 @@ try {
 	};
 }
 
-function Sizzle( selector, context, results, seed ) {
+function Sizzle( selector, context, results, seed ) {//1739处引用
+	//定义Sizzle函数
 	var m, i, elem, nid, match, groups, newSelector,
+		//将newContext指向我们传入的上下文对象
+		//如果没传那么就指向其undefined(null)
 		newContext = context && context.ownerDocument,
 
 		// nodeType defaults to 9, since context defaults to document
+		//译  :↑ nodeType默认为9，因为context默认为document
+		//即将nodeType指向为上下文对象的节点指数 如果没有传入那么就将其指向为9
 		nodeType = context ? context.nodeType : 9;
 
+	//对传入的results进行判定 如果有传入就指向为其 如果没有传入就指向为一个为空的数组
 	results = results || [];
 
 	// Return early from calls with invalid selector or context
+	//译 : ↑ 从无效选择器或上下文的调用中提前返回
+	//判定传入的选择器字符串是否符合标准
+	//即如果传入的selector不是字符串或是为undefined(null, 0, ""等等)且要求其nodeType的指数为1 |9 |11
+	//&&的运算符优先级高于||
 	if ( typeof selector !== "string" || !selector ||
 		nodeType !== 1 && nodeType !== 9 && nodeType !== 11 ) {
 
+		//如果选择器不满足以上要求 就直接返回一个为空的数组
 		return results;
 	}
 
 	// Try to shortcut find operations (as opposed to filters) in HTML documents
-	if ( !seed ) {
-
+	//译 : ↑ 尝试在HTML文档中快速找到操作（而​​不是过滤器）
+	if ( !seed ) {//如果没有传入seed参数
+		//如果没有传入上下文对象 使用document进行对比判断
 		if ( ( context ? context.ownerDocument || context : preferredDoc ) !== document ) {
+			//调用setDocument方法 对其兼容性的相关方法进行设定
 			setDocument( context );
 		}
-		context = context || document;
+		context = context || document;//判定context的指向 即没有传入的话就将其指向为document对象
 
-		if ( documentIsHTML ) {
+		if ( documentIsHTML ) {//判断文档类型是否为HTML5(h5)的规范
 
 			// If the selector is sufficiently simple, try using a "get*By*" DOM method
+			//译 : ↑ 如果选择器非常简单，请尝试使用“get * By *”DOM方法
 			// (excepting DocumentFragment context, where the methods don't exist)
+			//译 : ↑ （除了DocumentFragment上下文，方法不存在）
+			//对变量nodeType进行判定
 			if ( nodeType !== 11 && (match = rquickExpr.exec( selector )) ) {
-
+			//nodeType为11表示目标节点是一个documentfragment节点
+				//进入此判定则说明传入的上下文对象不是一个文档碎片对象
+				// 且 选择器字符串是一个标签名字符串或是id或是类名字符串
 				// ID selector
-				if ( (m = match[1]) ) {
+				if ( (m = match[1]) ) {//如果是id字符串 即#xxxx
 
 					// Document context
-					if ( nodeType === 9 ) {
+					if ( nodeType === 9 ) {//判断上下文对象是否是document对象
+						//进入此判定就说明传入的上下文对象是document对象
 						if ( (elem = context.getElementById( m )) ) {
+							//↑ 将elem指向为通过选择器字符串查找到的dom节点
 
 							// Support: IE, Opera, Webkit
+							//译 : ↑ 支持ie Opera webkit
 							// TODO: identify versions
+							//译 ↑ : 待办事项 确定版本
 							// getElementById can match elements by name instead of ID
-							if ( elem.id === m ) {
-								results.push( elem );
-								return results;
+							//译 : ↑ getElementById可以通过名称而不是ID匹配元素
+							if ( elem.id === m ) {//对筛选的节点进行判定 判断其id属性是否和我们传入的id值一样
+								results.push( elem );//如果符合即两个值全等 就将起推入数组中返回出去
+								return results;//返回结果数组
 							}
-						} else {
-							return results;
+						} else {//如果没有筛选到对应元素
+							return results;//就返回一个为空的数组
 						}
 
-					// Element context
-					} else {
+					// Element context 元素上下文
+					} else {//如果上下文对象不是document
 
-						// Support: IE, Opera, Webkit
-						// TODO: identify versions
+						// Support: IE, Opera, Webkit 译 : 支持ie Opera webkit
+						// TODO: identify versions 待办事项 确定版本
 						// getElementById can match elements by name instead of ID
+						//译 : ↑ getElementById可以通过名称而不是ID匹配元素
+						// 如果传入的context不是document
+						//对其ownerDocument进行判定  此处的newContext指向为传入context上下文对象对应的document对象
+
+						//要求newContext即传入节点的document对象 必须有值
+						//通过newContext上下文查找ID节点的方法查到的dom节点有值
+						//查找到的元素必须被传入的上下文所包含
+						//查找到的元素的id属性必须和我们传入的id值全等
+						//    ---- 如果满足以上的条件则将elem推入数组中并返回
 						if ( newContext && (elem = newContext.getElementById( m )) &&
 							contains( context, elem ) &&
 							elem.id === m ) {
@@ -867,37 +904,51 @@ function Sizzle( selector, context, results, seed ) {
 						}
 					}
 
-				// Type selector
-				} else if ( match[2] ) {
+				// Type selector 译 : 类选择器
+				} else if ( match[2] ) {//如果筛选到的字串是xxxx
+					//直接调用getElementsByTagName方法并将其推入数组中返回
 					push.apply( results, context.getElementsByTagName( selector ) );
 					return results;
 
-				// Class selector
+				// Class selector 译 : class 选择器
+					//先判断getElementsByClassName是否可用
+					//且我们传入的上下文对象中有getElementsByClassName方法
 				} else if ( (m = match[3]) && support.getElementsByClassName &&
 					context.getElementsByClassName ) {
-
+					//如果可用  就直接调用getElementsByClassName方法并将其推入到结果数组中返回
 					push.apply( results, context.getElementsByClassName( m ) );
 					return results;
 				}
 			}
 
-			// Take advantage of querySelectorAll
-			if ( support.qsa &&
-				!compilerCache[ selector + " " ] &&
+			// Take advantage of querySelectorAll 译 : 利用 QSA
+			//1.如果querySelectorAll可用
+			//2.缓存中没有过传入选择器字串的值
+			//3.浏览器兼容所有方法 或是选择器字串中所涉及的兼容性问题都不存在
+			if ( support.qsa &&//如果querySelectorAll可用
+				!compilerCache[ selector + " " ] &&//查看缓存中是否存在我们传入的选择器字串
 				(!rbuggyQSA || !rbuggyQSA.test( selector )) ) {
 
-				if ( nodeType !== 1 ) {
-					newContext = context;
-					newSelector = selector;
+				if ( nodeType !== 1 ) {//判断context上下文对象是否为一个元素节点
+					//如果元素节点不是一个元素节点
+                    newContext = context; //将newContext指向为context上下文对象
+					newSelector = selector;//将变量newSelector指向为传入的选择器字串
 
 				// qSA looks outside Element context, which is not what we want
+				//译 : ↑qSA看起来外部元素上下文，这不是我们想要的
 				// Thanks to Andrew Dupont for this workaround technique
-				// Support: IE <=8
-				// Exclude object elements
+				// 译 : ↑感谢Andrew Dupont的这种解决方法
+				// Support: IE <=8 译 : 支持ie8及以下
+				// Exclude object elements 译 : 排除对象元素
+					//nodeName 返回节点的名字
 				} else if ( context.nodeName.toLowerCase() !== "object" ) {
-
+					//进入此处判定 说明上下文对象的nodeName不为object
 					// Capture the context ID, setting it first if necessary
+					//译 : ↑ 捕获上下文ID，如果需要，先设置它
+					//将变量nid指向context上下文对象的id值并对其进行判定
 					if ( (nid = context.getAttribute( "id" )) ) {
+						//如果上下文对象的id值存在 进入此判定处
+						//     /([\0-\x1f\x7f]|^-?\d)|^-$|[^\0-\x1f\x7f-\uFFFF\w-]/g
 						nid = nid.replace( rcssescape, fcssescape );
 					} else {
 						context.setAttribute( "id", (nid = expando) );
@@ -938,18 +989,24 @@ function Sizzle( selector, context, results, seed ) {
 }
 
 /**
- * Create key-value caches of limited size
+ * Create key-value caches of limited size 译 : 建有限大小的键值缓存
  * @returns {function(string, object)} Returns the Object data after storing it on itself with
+ * 译 : ↑@returns {function（string，object）}将对象数据存储在自身上后返回
  *	property name the (space-suffixed) string and (if the cache is larger than Expr.cacheLength)
+ *译 : ↑ 属性名称（空格后缀）字符串和（如果缓存大于Expr.cacheLength）
  *	deleting the oldest entry
+ *译 : ↑ 删除最旧的条目
  */
-function createCache() {
-	var keys = [];
 
-	function cache( key, value ) {
+//使用了闭包的原理  每一次指向的keys都不一样 必须用变量保存起来才能访问到
+function createCache() {//定义createCache方法
+	var keys = [];//声明一个为空的数组
+
+	function cache( key, value ) {//声明内部函数cache
 		// Use (key + " ") to avoid collision with native prototype properties (see Issue #157)
+		//译 : 使用（key+" "）避免与原生原型属性相冲突（参见问题＃157）
 		if ( keys.push( key + " " ) > Expr.cacheLength ) {
-			// Only keep the most recent entries
+			// Only keep the most recent entries 译 : 只保留最近的条目
 			delete cache[ keys.shift() ];
 		}
 		return (cache[ key + " " ] = value);
@@ -1541,7 +1598,7 @@ setDocument = Sizzle.setDocument = function( node ) {//602处有引用
 			// Enforce case-sensitivity of name attribute 译 :强制名称属性的区分大小写
 			if ( el.querySelectorAll("[name=d]").length ) {
 				//为了测试属性名值选择器是否区分大小写 如果区分 那么直接跳过 如果不区分
-				//进入此逻辑 并想数组中添加字串
+				//进入此逻辑 并向数组中添加字串
 				rbuggyQSA.push( "name" + whitespace + "*[*^$|!~]?=" );
 			}
 
@@ -1549,33 +1606,47 @@ setDocument = Sizzle.setDocument = function( node ) {//602处有引用
 			//译 : ↑ FF 3.5 - :enabled/:disabled（隐藏元素仍然启用）
 			// IE8 throws error here and will not see later tests
 			//译 : ↑ IE8在这里抛出错误，不会再看到以后的测试
+			//:enabled 选择器匹配每个已启用的元素（大多用在表单元素上） 与 :disabled相反
 			if ( el.querySelectorAll(":enabled").length !== 2 ) {
 				//测试:enabled 伪类选择器是否可用 如果不可用进入此逻辑
 				rbuggyQSA.push( ":enabled", ":disabled" );
 			}
 
-			// Support: IE9-11+
+			// Support: IE9-11+ 译 : 支持ie8-11+
 			// IE's :disabled selector does not pick up the children of disabled fieldsets
+			//译 : ↑IE的：禁用的选择器不接收禁用字段集的子节点
+			//将新创建的元素添加到根标签中 并设置其为禁用状态
 			docElem.appendChild( el ).disabled = true;
 			if ( el.querySelectorAll(":disabled").length !== 2 ) {
+				//将创建的fieldset设置为disabled再查看:disabled选择的数量
+				//即查看:disabled在浏览器中的实现方式不同
+				//因为有的浏览器只会选择其两个 而有的浏览会选择三个等
 				rbuggyQSA.push( ":enabled", ":disabled" );
 			}
 
 			// Opera 10-11 does not throw on post-comma invalid pseudos
+			//译 : ↑ Opera10-11不会引用逗号后无效伪造
 			el.querySelectorAll("*,:x");
 			rbuggyQSA.push(",.*:");
 		});
 	}
 
+	//matchesSelector如果元素将被指定的选择器字符串选择，Element.matches()  方法返回true; 否则返回false。
+
 	if ( (support.matchesSelector = rnative.test( (matches = docElem.matches ||
+				//添加前缀用于兼容不同版本的浏览器
 		docElem.webkitMatchesSelector ||
 		docElem.mozMatchesSelector ||
 		docElem.oMatchesSelector ||
 		docElem.msMatchesSelector) )) ) {
 
+		//即 如果兼容matchesSelector方法 进入下面的逻辑
+		//调用判错函数进行检测
 		assert(function( el ) {
 			// Check to see if it's possible to do matchesSelector
+			//译 : ↑检查是否可以做matchSelector
 			// on a disconnected node (IE 9)
+			//译 : ↑ 在断开连接的节点（IE 9）
 			support.disconnectedMatch = matches.call( el, "*" );
 
 			// This should fail with an exception
@@ -1585,35 +1656,49 @@ setDocument = Sizzle.setDocument = function( node ) {//602处有引用
 		});
 	}
 
+	// rbuggyQSA的值为false 或是每个元素以|分隔的正则表达式
 	rbuggyQSA = rbuggyQSA.length && new RegExp( rbuggyQSA.join("|") );
 	rbuggyMatches = rbuggyMatches.length && new RegExp( rbuggyMatches.join("|") );
 
 	/* Contains
 	---------------------------------------------------------------------- */
+	//node.compareDocumentPosition => 比较当前节点与任意文档中的另一个节点的位置关系
+	//将变量hasCompare指向为检测compareDocumentPosition是否可用的布尔值
+	//如果可用 则其值为true 如果不可用则其值为false
 	hasCompare = rnative.test( docElem.compareDocumentPosition );
 
-	// Element contains another
-	// Purposefully self-exclusive
-	// As in, an element does not contain itself
-	contains = hasCompare || rnative.test( docElem.contains ) ?
-		function( a, b ) {
+	// Element contains another 译 : 元素包含另一个
+	// Purposefully self-exclusive 译 : 有意独立的
+	// As in, an element does not contain itself 译 : 如同，元素不包含自身
+
+	//contains方法用于判断传入的两个参数之间是否存在包含关系
+	contains = hasCompare || rnative.test( docElem.contains ) ?//890处应用
+		//如果hasCompare为true的话  将contains的值也指向为true 即compareDocumentPosition可用
+		//如果hasCompare为false, 那么就对contains进行判定
+		//如果判定符合目标正则 将其指向为一个函数
+		function( a, b ) {//contains可用
+			//对传入的a的类型进行判定 如果其nodeType指数为9 声明adown并将其指向为传入a所在文档对象的根标签
+			//如果不是document指数 就将adown指向为a
 			var adown = a.nodeType === 9 ? a.documentElement : a,
+				//将bup指向为传入b参数的父节点
 				bup = b && b.parentNode;
+			//
 			return a === bup || !!( bup && bup.nodeType === 1 && (
 				adown.contains ?
-					adown.contains( bup ) :
-					a.compareDocumentPosition && a.compareDocumentPosition( bup ) & 16
+					adown.contains( bup ) ://判断adown中是否包含bup
+					a.compareDocumentPosition && a.compareDocumentPosition( bup ) & 16//如果contains方法不可用
+					//那么久调用compareDocumentPosition(由于该方法的返回值是一个16进制的字段 所以需要&16)
 			));
 		} :
-		function( a, b ) {
-			if ( b ) {
+		function( a, b ) {//contains不可用
+			if ( b ) {//进行循环调用 不断让b指向为其父元素 如果在某次循环全等于a 那就说明a包含b 就返回true
 				while ( (b = b.parentNode) ) {
 					if ( b === a ) {
 						return true;
 					}
 				}
 			}
-			return false;
+			return false;//如果到最后也不全等 则说明a中不包含b  就返回false
 		};
 
 	/* Sorting
@@ -1719,7 +1804,9 @@ setDocument = Sizzle.setDocument = function( node ) {//602处有引用
 	return document;
 };
 
-Sizzle.matches = function( expr, elements ) {
+Sizzle.matches = function( expr, elements ) {//1579处有引用
+	//定义matches方法
+	//该方法的调用就是调用Sizzle方法
 	return Sizzle( expr, null, null, elements );
 };
 
