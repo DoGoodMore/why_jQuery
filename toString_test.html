@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>toString_test</title>
+</head>
+<body>
+<script>
+    var a = 1;
+    var b = {};
+    var c = function () {
+        console.log(111);
+    }
+    console.log(typeof a.toString())
+    console.log(a.toString == b.toString)//false
+    console.log(a.toString === b.toString)//false
+    console.log(c.toString === b.toString)//false
+    console.log(c.toString == b.toString)//false
+    console.log(c.toString == c.toString)//true
+
+
+    console.log("=========================");
+    console.log(c.toString.call(b, 1));//抛错
+</script>
+</body>
+</html>

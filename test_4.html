@@ -12,8 +12,16 @@
 <div name="testNode"></div>
 <script src="jquery-3.2.1.js"></script>
 <script>
-    var testNode = $("[name=testNode]");
-    console.log(testNode);
+    var a = {a : a, b : a},
+        b,
+        i ;
+    for(var name in a){
+        i = name;
+        b = a[name];
+        console.log(i);
+        console.log(b);
+    }
+    console.log({} != null);
 </script>
 </body>
 </html>

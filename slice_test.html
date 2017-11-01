@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+    /*var textTest = "hello world";
+    var numberTest = 11111;
+    console.log([].slice.call(textTest));
+    console.log([].slice.call(numberTest));*/
+    function sliceTest(dataType) {
+        console.log([].slice.call(dataType))
+    }
+    var arrTest = {length : 2, splice : function () {}, a : 1, b : 2};
+    console.log(arrTest.toString());
+    arrTest = [].splice.call(arrTest);
+    console.log(arrTest);
+    console.log(Array.isArray(arrTest));
+
+    console.log("========================")
+    sliceTest(1111);
+    sliceTest("hello world");
+    sliceTest(true);
+    //sliceTest(undefined);//抛错
+    sliceTest({a : 1});
+    sliceTest({}.toString);
+    sliceTest([1, 2, 3]);
+//    sliceTest();//抛错
+</script>
+</body>
+</html>

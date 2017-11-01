@@ -46,28 +46,42 @@
 // enough that all such attempts are guarded in a try block.
 "use strict";//声明使用严格模式编码
 
-var arr = [];
+var arr = [];//声明一个为空的数组
 
-var document = window.document;
+var document = window.document;//将变量document指向为全局的上下文对象
 
+//Object.getPrototypeOf() 方法返回指定对象的原型（内部[[Prototype]]属性的值）。
 var getProto = Object.getPrototypeOf;
 
+//Array.prototype.slice方法返回一个从开始到结束(不包含结束)选择的数组的一部分
+	//返回值是一个新数组 原数组不会被改变且不会受影响
 var slice = arr.slice;
 
+//Array.prototype.concat方法用于合并两个或多个数组 此方法不会更改现有数组 而是返回一个新数组
 var concat = arr.concat;
 
+//Array.prototype.push 方法用于向数组的末端加入一个新的元素 该方法会影响原数组
+	//该方法的返回值是传入的参数 即添加过后的新数组的最后一个元素
 var push = arr.push;
 
+//Array.prototype.indexOf 方法用于搜索给定参数在数组中的下标, 如果不存在 则返回-1
+	//引用数据类型必须指向完全相同才会返回下标 若是指向不同那么返回-1
 var indexOf = arr.indexOf;
 
-var class2type = {};
+var class2type = {};//将变量class2type指向为一个为空的对象
 
+//Object.prototype.toString 方法返回一个表示该对象的字符串
+	//[object type]
 var toString = class2type.toString;
 
+//Object.prototype.hasOwnProperty 方法返回一个布尔值
+	//用于指示对象是否具有指定的属性(自身的属性而不是继承的属性)
 var hasOwn = class2type.hasOwnProperty;
 
+//函数的toString方法 函数/对象/基本数据类型的toString方法都是不一样的
 var fnToString = hasOwn.toString;
 
+//使用变量ObjectFunctionString 来表示函数执行对象toString方法结果
 var ObjectFunctionString = fnToString.call( Object );
 
 var support = {};
@@ -83,8 +97,10 @@ var support = {};
 		doc.head.appendChild( script ).parentNode.removeChild( script );
 	}
 /* global Symbol */
-// Defining this global in .eslintrc.json would create a danger of using the global 译 :在.eslintrc.json中定义这个全局将会造成使用全局的危险
-// unguarded in another place, it seems safer to define global only for this module 译 : 在另一个地方没有保护，对于此模块定义全局似乎更安全
+// Defining this global in .eslintrc.json would create a danger of using the global
+// 译 :在.eslintrc.json中定义这个全局将会造成使用全局的危险
+// unguarded in another place, it seems safer to define global only for this module
+// 译 : 在另一个地方没有保护，对于此模块定义全局似乎更安全
 
 
 
@@ -99,22 +115,26 @@ var
         return new jQuery.fn.init( selector, context );//返回一个实例对象 构造函数为jQuery.fn.init
     },
 
-	// Support: Android <=4.0 only
-	// Make sure we trim BOM and NBSP
+	// Support: Android <=4.0 only 译 : 只支持安卓4.0以下的版本
+	// Make sure we trim BOM and NBSP 译 : 确保我们修剪BOM和NBSP
+	//即匹配所有的空格
 	rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,
 
 	// Matches dashed string for camelizing
+	//译 : ↑ 匹配拼凑的虚线
 	rmsPrefix = /^-ms-/,
 	rdashAlpha = /-([a-z])/g,
 
 	// Used by jQuery.camelCase as callback to replace()
-	fcamelCase = function( all, letter ) {
+	//译 : ↑ 由jQuery.camelCase用作回调替换（）
+	fcamelCase = function( all, letter ) {//定义替换小写字母 用于后面的replace函数做调用
 		return letter.toUpperCase();
 	};
 
 jQuery.fn = jQuery.prototype = {//定义fn  fn指向的就是jQuery的原型对象
 
 	// The current version of jQuery being used
+	//译 : ↑ 正在使用当前版本的jQuery
 	jquery: version,
 
 	constructor: jQuery,
@@ -122,42 +142,56 @@ jQuery.fn = jQuery.prototype = {//定义fn  fn指向的就是jQuery的原型对�
 	// The default length of a jQuery object is 0
 	length: 0,
 
-	toArray: function() {
+	toArray: function() {//定义toArray方法
+		//该方法可以用来将一个伪数组转换成为一个真数组
 		return slice.call( this );
 	},
 
 	// Get the Nth element in the matched element set OR
+	//译 : ↑ 获取匹配元素集合中的第N个元素
 	// Get the whole matched element set as a clean array
-	get: function( num ) {
+	//译 : ↑ 将整个匹配的元素集合设置为干净的数组
+	get: function( num ) {//定义xxx.get方法
+		//该方法用于获取指定传入参数下标位置的元素
 
 		// Return all the elements in a clean array
-		if ( num == null ) {
+		//译 : ↑ 返回一个干净的数组中的所有元素
+		if ( num == null ) {//如果没有传入参数 那么就返回调用方法的对象
 			return slice.call( this );
 		}
 
 		// Return just the one element from the set
+		//译 : ↑ 从集合中只返回一个元素
 		return num < 0 ? this[ num + this.length ] : this[ num ];
 	},
 
 	// Take an array of elements and push it onto the stack
+	//译 : ↑ 拿一些元素并将其推到堆栈上
 	// (returning the new matched element set)
-	pushStack: function( elems ) {
-
+	//译 : ↑ （返回新的匹配元素集）
+	pushStack: function( elems ) {//定义pushStack方法
 		// Build a new jQuery matched element set
+		//译 : ↑ 构建一个新的jQuery匹配元素集
+		//创建一个新的空jQuery对象  并将传入的元素添加入该对象中
+		//并将变量ret指向整合后的对象
 		var ret = jQuery.merge( this.constructor(), elems );
 
 		// Add the old object onto the stack (as a reference)
+		//译 : ↑ 将旧对象添加到堆栈（作为参考）
 		ret.prevObject = this;
 
 		// Return the newly-formed element set
+		//译 :↑ 返回新形成的元素集
 		return ret;
 	},
 
 	// Execute a callback for every element in the matched set.
-	each: function( callback ) {
+	//译 : ↑ 对匹配集合中的每个元素执行回调。
+	each: function( callback ) {//定义each方法
 		return jQuery.each( this, callback );
 	},
 
+	//
 	map: function( callback ) {
 		return this.pushStack( jQuery.map( this, function( elem, i ) {
 			return callback.call( elem, i, elem );
@@ -195,26 +229,37 @@ jQuery.fn = jQuery.prototype = {//定义fn  fn指向的就是jQuery的原型对�
 
 jQuery.extend = jQuery.fn.extend = function() {//定义extend方法
 	var options, name, src, copy, copyIsArray, clone,
+		//使用target变量获取到第一个参数
 		target = arguments[ 0 ] || {},
 		i = 1,
+		//使用length变量保存实参的个数
 		length = arguments.length,
 		deep = false;
 
 	// Handle a deep copy situation 译 : 处理深层复制情况
 	if ( typeof target === "boolean" ) {//判断第一个参数是否为布尔值
+		//如果第一个参数是一个布尔值 那么将deep变量指向为该布尔值
 		deep = target;
 
 		// Skip the boolean and the target 译 : 跳过布尔值和目标值
+		//即如果第一个参数是一个布尔值 那么将target变量指向为第二个实参
+		//且将i变量的值自增一个单位
 		target = arguments[ i ] || {};
 		i++;
 	}
 
-	// Handle case when target is a string or something (possible in deep copy) 译 : 当目标是字符串或某些东西（可能在深层复制中）处理情况
+	// Handle case when target is a string or something (possible in deep copy)
+	// 译 : ↑当目标是字符串或某些东西（可能在深层复制中）处理情况
+	//继续对实参进行判定 如果第一个实参不是布尔值
+	//即既不是对象也不是函数就将变量target指向为一个为空的对象
+	//不是对象就返回true 是对象就返回false  是函数就返回false 不是函数就返回true
 	if ( typeof target !== "object" && !jQuery.isFunction( target ) ) {
 		target = {};
 	}
 
 	// Extend jQuery itself if only one argument is passed
+	//译 : ↑如果只传递一个参数，则扩展jQuery本身
+	//即如果实参的个数只有一个 那么就让target变量指向为Jquery本身
 	if ( i === length ) {
 		target = this;
 		i--;
@@ -223,19 +268,27 @@ jQuery.extend = jQuery.fn.extend = function() {//定义extend方法
 	for ( ; i < length; i++ ) {
 
 		// Only deal with non-null/undefined values
+		//译 : ↑ 只处理非空/未定义的值
+		//对每个参数进行判定 判定每个实参是true还是false
+		//并将每一个实参保存到变量options中
 		if ( ( options = arguments[ i ] ) != null ) {
 
 			// Extend the base object
+			//译 : ↑ 扩展基础对象
+			//遍历实参对象
 			for ( name in options ) {
 				src = target[ name ];
 				copy = options[ name ];
 
 				// Prevent never-ending loop
+				//译 : ↑ 防止永无止境的循环
+				//即防止对象的属性值指向的是对象本身 就造成了死循环
 				if ( target === copy ) {
 					continue;
 				}
 
 				// Recurse if we're merging plain objects or arrays
+				//译 : ↑如果我们合并了普通的对象或数组，就会重新出现
 				if ( deep && copy && ( jQuery.isPlainObject( copy ) ||
 					( copyIsArray = Array.isArray( copy ) ) ) ) {
 
@@ -262,7 +315,7 @@ jQuery.extend = jQuery.fn.extend = function() {//定义extend方法
 	return target;
 };
 
-jQuery.extend( {
+jQuery.extend( {//在上述定义后直接调用
 
 	// Unique for each copy of jQuery on the page
 	expando: "jQuery" + ( version + Math.random() ).replace( /\D/g, "" ),
@@ -276,11 +329,11 @@ jQuery.extend( {
 
 	noop: function() {},
 
-	isFunction: function( obj ) {//定义isFunction方法
+	isFunction: function( obj ) {//定义isFunction方法 238处引用
 		return jQuery.type( obj ) === "function";
 	},
 
-	isWindow: function( obj ) {
+	isWindow: function( obj ) {//623引用 定义isWindow方法 该方法用于判定一个变量是否是window对象
 		return obj != null && obj === obj.window;
 	},
 
@@ -298,7 +351,7 @@ jQuery.extend( {
 			!isNaN( obj - parseFloat( obj ) );
 	},
 
-	isPlainObject: function( obj ) {
+	isPlainObject: function( obj ) {//274处引用
 		var proto, Ctor;
 
 		// Detect obvious negatives
@@ -377,24 +430,27 @@ jQuery.extend( {
 		return string.replace( rmsPrefix, "ms-" ).replace( rdashAlpha, fcamelCase );
 	},
 
-	each: function( obj, callback ) {
+	each: function( obj, callback ) {//定义遍历的方法 //定义each方法
 		var length, i = 0;
 
-		if ( isArrayLike( obj ) ) {
-			length = obj.length;
-			for ( ; i < length; i++ ) {
+		if ( isArrayLike( obj ) ) {//对传入对象进行判断 判定是否是一个数组或伪数组
+			length = obj.length;//获取到传入参数的长度
+			for ( ; i < length; i++ ) {//对其进行遍历
+				//将每个回调函数中的this指向为遍历数组(维数组)中的每一个数组
+				//且 如果 期间某个函数返回值为false就跳出each循环
+				//即符合在jquery中使用return false 就可以终止循环
 				if ( callback.call( obj[ i ], i, obj[ i ] ) === false ) {
 					break;
 				}
 			}
 		} else {
-			for ( i in obj ) {
+			for ( i in obj ) {//如果遍历的参数是一个对象 那么久使用key in obj的方式来遍历
 				if ( callback.call( obj[ i ], i, obj[ i ] ) === false ) {
 					break;
 				}
 			}
 		}
-
+		//最终返回obj 符合链式调用的原则
 		return obj;
 	},
 
@@ -557,20 +613,29 @@ function( i, name ) {
 	class2type[ "[object " + name + "]" ] = name.toLowerCase();//对所有类型的字符串标识进行遍历  并按照该格式给class2type添加属性 属性名为[object xxx]的格式 属性值为xxx 即对应的type的值
 } );
 
-function isArrayLike( obj ) {
+function isArrayLike( obj ) {//435引用
 
 	// Support: real iOS 8.2 only (not reproducible in simulator)
+	//译 : ↑ 支持：只有真正的iOS 8.2（在模拟器中不可重现）
 	// `in` check used to prevent JIT error (gh-2145)
+	//译: ↑`in`检查用于防止JIT错误（gh-2145）
 	// hasOwn isn't used here due to false negatives
+	//译 : ↑ hasOwn由于假阴性而不在这里使用
 	// regarding Nodelist length in IE
+	//译: ↑关于IE中的Nodelist长度
+	//判断传入的参数中是否有length属性
 	var length = !!obj && "length" in obj && obj.length,
+		//获取到传入参数的type类型并用变量type保存
 		type = jQuery.type( obj );
 
 	if ( type === "function" || jQuery.isWindow( obj ) ) {
+		//对传入参数的类型进行判定 如果是函数或window对象 则返回false
 		return false;
 	}
 
 	return type === "array" || length === 0 ||
+		//即要求传入参数中必须有length属性 且length属性的属性值必须是一个Number类型的
+		//长度必须大于0 且length - 1 必须要存在
 		typeof length === "number" && length > 0 && ( length - 1 ) in obj;
 }
 var Sizzle =
@@ -591,7 +656,7 @@ var i,
 	Expr,//1282处引用
 	getText,
 	isXML,
-	tokenize,
+	tokenize,//969引用
 	compile,
 	select,
 	outermostContext,
@@ -674,10 +739,12 @@ var i,
 
 	// Leading and non-escaped trailing whitespace, capturing some non-whitespace characters preceding the latter
 	rwhitespace = new RegExp( whitespace + "+", "g" ),
-	rtrim = new RegExp( "^" + whitespace + "+|((?:^|[^\\\\])(?:\\\\.)*)" + whitespace + "+$", "g" ),
+
+	rtrim = new RegExp( "^" + whitespace + "+|((?:^|[^\\\\])(?:\\\\.)*)" + whitespace + "+$", "g" ),//2519处引用
 
 	rcomma = new RegExp( "^" + whitespace + "*," + whitespace + "*" ),
-	rcombinators = new RegExp( "^" + whitespace + "*([>+~]|" + whitespace + ")" + whitespace + "*" ),
+	//该正则表示匹配   +    >    ~  即css关系选择器字串的选择符
+	rcombinators = new RegExp( "^" + whitespace + "*([>+~]|" + whitespace + ")" + whitespace + "*" ),//2510处引用
 
 	rattributeQuotes = new RegExp( "=" + whitespace + "*([^\\]'\"]*?)" + whitespace + "*\\]", "g" ),
 
@@ -746,7 +813,7 @@ var i,
 	// CSS string/identifier serialization 译 : CSS字符串/标识符序列化
 	// https://drafts.csswg.org/cssom/#common-serializing-idioms
 	rcssescape = /([\0-\x1f\x7f]|^-?\d)|^-$|[^\0-\x1f\x7f-\uFFFF\w-]/g,//949引用
-	fcssescape = function( ch, asCodePoint ) {
+	fcssescape = function( ch, asCodePoint ) {//952处引用
 		if ( asCodePoint ) {
 
 			// U+0000 NULL becomes U+FFFD REPLACEMENT CHARACTER
@@ -757,6 +824,12 @@ var i,
 
 			// Control characters and (dependent upon position) numbers get escaped as code points
 			//译 : ↑ 控制字符和（取决于位置）数字作为代码点被转义
+			/*charCodeAt() 方法返回0到65535之间的整数，
+			表示给定索引处的UTF-16代码单元
+			(在 Unicode 编码单元表示一个单一的 UTF-16
+			编码单元的情况下，UTF-16 编码单元匹配 Unicode 编码单元。
+			但在——例如 Unicode 编码单元 > 0x10000 的这种——不能被一个 UTF-16 编码单元单独表示的情况下，
+			只能匹配 Unicode 代理对的第一个编码单元) 。如果你想要整个代码点的值，使用 codePointAt()。*/
 			return ch.slice( 0, -1 ) + "\\" + ch.charCodeAt( ch.length - 1 ).toString( 16 ) + " ";
 		}
 
@@ -949,12 +1022,17 @@ function Sizzle( selector, context, results, seed ) {//1739处引用
 					if ( (nid = context.getAttribute( "id" )) ) {
 						//如果上下文对象的id值存在 进入此判定处
 						//     /([\0-\x1f\x7f]|^-?\d)|^-$|[^\0-\x1f\x7f-\uFFFF\w-]/g
+						//即如果有ID属性值
 						nid = nid.replace( rcssescape, fcssescape );
 					} else {
+						//如果上下文对象没有id属性
+						//为其设置id属性 为一个随机生成的字串
+						//并将其赋值给nid变量
 						context.setAttribute( "id", (nid = expando) );
 					}
 
 					// Prefix every selector in the list
+					//译 ↑ 前缀列表中的每个选择器
 					groups = tokenize( selector );
 					i = groups.length;
 					while ( i-- ) {
@@ -1966,7 +2044,7 @@ Expr = Sizzle.selectors = {
 		"~": { dir: "previousSibling" }
 	},
 
-	preFilter: {
+	preFilter: {//2493处引用
 		"ATTR": function( match ) {
 			match[1] = match[1].replace( runescape, funescape );
 
@@ -2465,45 +2543,53 @@ function setFilters() {}
 setFilters.prototype = Expr.filters = Expr.pseudos;
 Expr.setFilters = new setFilters();
 
-tokenize = Sizzle.tokenize = function( selector, parseOnly ) {
+tokenize = Sizzle.tokenize = function( selector, parseOnly ) {//定义tokenize 方法
+	//该方法需要两个参数 1. 选择器字串  2.是否只解析
 	var matched, match, tokens, type,
 		soFar, groups, preFilters,
-		cached = tokenCache[ selector + " " ];
+		cached = tokenCache[ selector + " " ];//将该选择器字串存入缓存对象中
 
-	if ( cached ) {
+	if ( cached ) {//判定缓存中是否已存在该选择器字串
 		return parseOnly ? 0 : cached.slice( 0 );
+		//存在该选择器字串的缓存且parseOnly为true 那么返回0,
+		//如果传入的parseOnly 为false 那么返回缓存中的该值
 	}
+	// console.log(selector);
+	soFar = selector;//将变量soFar指向为选择器字串
+	groups = [];//groups指向为一个为空的数组
+	preFilters = Expr.preFilter;//将变量preFilters指向为Expr.preFilter对象
 
-	soFar = selector;
-	groups = [];
-	preFilters = Expr.preFilter;
+	while ( soFar ) {//依据soFar的值进行循环
 
-	while ( soFar ) {
-
-		// Comma and first run
-		if ( !matched || (match = rcomma.exec( soFar )) ) {
-			if ( match ) {
+		// Comma and first run 译 逗号和第一次跑
+		if ( !matched || (match = rcomma.exec( soFar )) ) {//第一次循环进入判断 因为matched = undefined
+			if ( match ) {//第一次循环 不会进入判断 因为match = undefined
 				// Don't consume trailing commas as valid
+				//译 : ↑ 不要使用逗号作为有效的逗号
 				soFar = soFar.slice( match[0].length ) || soFar;
 			}
-			groups.push( (tokens = []) );
+			groups.push( (tokens = []) );//第一次循环将tokens指向为一个为空的数组 并将其推入groups指向的空数组中
 		}
 
-		matched = false;
+		matched = false;//第一次进入时 matched指向为true 将其指向改为false
 
-		// Combinators
-		if ( (match = rcombinators.exec( soFar )) ) {
-			matched = match.shift();
-			tokens.push({
-				value: matched,
+		// Combinators 译 组合子
+		if ( (match = rcombinators.exec( soFar )) ) {//rcombinators.exec( soFar )即为了检测 选择器字串中是否含有+>~
+			//第一次循环 将match指向为rcombinators.exec( soFar )的结果数组
+			//即如果选择器字串中含有+~> 那么
+			matched = match.shift();//shift 删除并返回数组的第一个元素 将matched指向为筛选到的关系选择器字串
+			tokens.push({//将筛选到的选择器关系字串保存到一个对象并推入token数组中
+				value: matched,//matched 筛选到的css关系字串
 				// Cast descendant combinators to space
+				// 译 : 将后代组转换为空格
+				//"^" + whitespace + "+|((?:^|[^\\\\])(?:\\\\.)*)" + whitespace + "+$", "g"
 				type: match[0].replace( rtrim, " " )
 			});
 			soFar = soFar.slice( matched.length );
 		}
 
 		// Filters
-		for ( type in Expr.filter ) {
+            for ( type in Expr.filter ) {
 			if ( (match = matchExpr[ type ].exec( soFar )) && (!preFilters[ type ] ||
 				(match = preFilters[ type ]( match ))) ) {
 				matched = match.shift();
@@ -5071,6 +5157,7 @@ var rhtml = /<|&#?\w+;/;//匹配目标字符串中必须有< 或者&xxx;
 
 	//9857 ---- > elems是一个数组(包含选择器字符串) context是一个新创建的document对象 scripts是一个为空的数组
 	//selection, ignored为undefined
+	//10148引用
 function buildFragment( elems, context, scripts, selection, ignored ) {//定义buildFragment方法
 // 选择器字符串 context对象(如果没传就为false) scripts scripts = !keepScripts && []
 	var elem, tmp, tag, wrap, contains, j,
@@ -10098,7 +10185,9 @@ support.createHTMLDocument = ( function() {
 
 		// Stop scripts or inline event handlers from being executed immediately 译 :停止脚本或内联事件处理程序立即执行
 		// by using document.implementation 译 : 通过使用document.implementation
-		if ( support.createHTMLDocument ) {
+		if ( support.createHTMLDocument ) {//判断createHTMLDocument是否可用
+			//如果可用
+			//将context上下文对象指向为一个新创建的document对象
 			context = document.implementation.createHTMLDocument( "" );//context指向为新创建的document对象
 
 			// Set the base href for the created document 译 : 设置创建的文档的基本href
