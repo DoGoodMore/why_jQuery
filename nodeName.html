@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<object data="indexOf_test.html" type="text">
+    hello world
+</object>
+<script>
+    var testNode = document.createDocumentFragment();
+    var innerNode = document.createElement("div");
+    innerNode.id = "text";
+    testNode.appendChild(innerNode);
+    console.log(testNode);
+    var testNodeByDocument = document.getElementById("text");
+    console.log(innerNode.ownerDocument === document);
+    console.log("nodeName = " + innerNode.nodeName);
+    console.log("fragment =" + testNode.nodeName)
+    console.log({}.nodeName);
+    console.log(document.nodeName);
+    console.log(2);
+    console.log(document.getElementsByTagName("object")[0].nodeName);
+</script>
+</body>
+</html>

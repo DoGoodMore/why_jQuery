@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="test_id"></div>
+<div name="test_id">name 属性</div>
+<script>
+    var testNode = document.createElement("div");
+    testNode.innerHTML = "111111";
+    testNode.id = "test_id";
+    document.body.appendChild(testNode);
+    var test2_Node = document.createElement("div");
+    test2_Node.innerHTML = "222222222";
+    test2_Node.name = "test_id";
+    document.body.appendChild(test2_Node);
+    var NodeArr = document.getElementsByName("test_id");
+    console.log(NodeArr);
+
+    console.log("=====================");
+
+    var testNode = document.createElement("div");
+    document.documentElement.appendChild(testNode).id = "hello_world";
+    console.log(document.getElementsByName("hello_world"));
+</script>
+</body>
+</html>

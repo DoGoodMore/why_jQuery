@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var test_1 = "hello world";
+    var obj = {
+        test_1 : function () {
+            console.log("test_1");
+        },
+        test_2 : function () {
+            console.log(this.test_1);
+        }
+    }
+    obj.test_2.call(window);
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>property_test</title>
+</head>
+<body>
+<script>
+    var obj = {
+        test : "hello world"
+    }
+    var fun = function () {
+        console.log("hello world");
+    }
+    //函数的原型指向为其实例的隐式原型
+    //实例的隐式原型的constructor方法指向为函数
+    //函数的原型的constructor指向为函数本身
+    console.log(obj.prototype);
+    console.log(obj);
+    console.log(fun);
+    console.log(fun.prototype);
+    console.log(typeof fun.prototype);
+    console.log(fun.prototype.constructor);
+    console.log(fun.prototype === new fun().__proto__);//true
+    console.log(fun === new fun().__proto__.constructor);//true
+    console.log(fun.prototype.constructor === fun);//true
+    console.log(fun.constructor === new Function().constructor);
+    console.log("------------------");
+    for(var i in fun.prototype){
+        console.log("key = " + i, "value = " + fun.prototype[i]);
+    }
+</script>
+</body>
+</html>

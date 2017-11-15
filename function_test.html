@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+//    debugger;
+    var test = function () {
+        var test_inner = function () {
+            console.log("test_inner");
+        }
+        console.log("test");
+        return test_inner;
+    }
+    var obj =  {
+        test : function () {
+            console.log("obj.test");
+        }
+    }
+
+    var  functionTest = function (a, b) {
+        if(!a){
+            return function(a, b , c, d){
+                console.log(1111);
+            }
+        }else {
+            return function () {
+                console.log(2222);
+            }
+        }
+    }
+    a = functionTest(1);
+    console.log(a.constructor === functionTest.prototype);
+    console.log(a);
+
+    var test_3 = function (a, b, c) {
+        return new test_3.fn.init(a, b, c);
+    }
+    test_3.prototype = test_3.fn =  {
+        init : function (a, b, c) {
+            console.log(a, b, c);
+            this.a = a;
+            this.b = b;
+            this.c = c;
+            return [this];
+        }
+    };
+    console.log(test_3(1, 2, 3));
+</script>
+</body>
+</html>

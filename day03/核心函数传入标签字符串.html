@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>核心函数传入标签字符串</title>
+</head>
+<body>
+
+
+<script src="../jquery-3.2.1.js"></script>
+<script type="text/javascript">
+
+
+    //debugger;
+    var testNode = jQuery("<div id='test'></div>");
+    var testNode2 = jQuery.parseHTML("<div id='test'></div>", document, true);
+    console.log(testNode2);
+    /*
+    *  根据提供的原始 HTML 标记字符串，动态创建由 jQuery 对象包装的 DOM 元素。同时设置一系列的属性、事件等。
+    *     你可以传递一个手写的 HTML 字符串，或者由某些模板引擎或插件创建的字符串，也可以是通过 AJAX 加载过来的字符串。
+    *     当然这个字符串可以包含斜杠 (比如一个图像地址)，还有反斜杠。当你创建单个元素时，请使用闭合标签或 XHTML 格式。例如，创建一个 span ，可以用$("<span/>") 或 $("<span></span>") ，但不推荐 $("<span>")。
+    *     在jQuery 中，这个语法等同于$(document.createElement("span")) 。
+    *     在jQuery 1.8中，通过$(html,props)， 您可以使用任何jQuery对象的方法或插件。在此之前，你只能使用一个方法名的短名单，并有没有成文的方式添加到列表中。
+    *     然而，请注意，这可能会导致你的代码的行为改变，如果插件添加后，有相同的名称作为HTML属性。
+    */
+
+
+    /*
+    *   1.调用jQuery函数
+    *    2.进入jQuery.fn.init
+    *
+    *
+    *
+    *
+    *
+    */
+</script>
+</body>
+</html>

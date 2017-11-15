@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<div id="test"></div>
+<script>
+    var bodyNode = document.body;
+    var matches = bodyNode.matches;
+    if(bodyNode.msMatchesSelector){
+        console.log(bodyNode.msMatchesSelector("body"));
+    }else {
+
+        console.log(bodyNode.matches("body"));
+        console.log(matches.call(bodyNode, "body"));
+    }
+</script>
+</body>
+</html>

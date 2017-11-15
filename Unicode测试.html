@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Unicode测试</title>
+</head>
+<body>
+<div id="test">
+    <a href="#" id="test_2">test</a>
+</div>
+<script src="jquery-3.2.1.js"></script>
+<script>
+    var test = "\uFFFd";
+    console.log(test);
+    var Arr = ["1", "2", "3"];
+    console.log(Arr + "//");
+    var obj = {
+        a : 1
+    };
+    obj = 0xf;
+    console.log(obj.toString( 10 ));
+    var whitespace = "[\\x20\\t\\r\\n\\f]";
+    var reg = new RegExp("^" + whitespace + "*([>+~]|" + whitespace + ")" + whitespace + "*")
+    console.log(reg);
+    var reg2 = /[>+~]/;
+    var testText = ">a";
+    console.log(reg.exec(testText));
+    console.log($("#test > #test_2"));
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>reg_\</title>
+</head>
+<body>
+<!--我是一个注释节点-->
+<div name="test" id="test">
+    <div class="test">22</div>
+    <!--1111-->
+    <!--2222-->
+    111
+</div>
+<input type="text" name="test">
+<script src="jquery-3.2.1.js"></script>
+<script>
+    var testNode = document.createElement("div").innerHTML = "hello world";
+    console.log(typeof testNode);
+
+    console.log("-----------------");
+    var strTest = "\\\\.";
+    var regRxpTest = new RegExp(strTest, "g");
+    console.log(regRxpTest.test("\\."));
+    console.log("\\.");
+    console.log("\\\\." + "111");
+
+
+    console.log("=======================");
+    var identifier = "(?:\\\\.|[\\w-]|[^\0-\\xa0])+";
+    var ID = new RegExp( "^#(" + identifier + ")" );
+    console.log(ID);
+    //  /^#((?:\\.|[\w-]|[^ -\xa0]+)/
+    console.log(ID.exec("# -"));
+    var a = "\xa0";
+    var b = '\xa0';
+    console.log(a === b);
+
+    console.log()
+    console.log()
+    console.log()
+    console.log("=====")
+    console.log("=====");
+    var reg =  new RegExp( "[^\0-\\xa0]" );
+    var regTest_1 = new RegExp("\\0");
+    var regTest_2 = new RegExp("\\x0");
+    console.log(reg);
+    console.log(regTest_2.test("\0"))
+    console.log(regTest_1.test("\x00"))
+
+    console.log('---------------');
+    console.log('---------------');
+
+    var whitespace = "[\\x20\\t\\r\\n\\f]";
+    var attributes = "\\[" + whitespace + "*(" + identifier + ")(?:" + whitespace +
+        // Operator (capture 2)
+        //译 : ↑ 操作员（捕捉2）
+        //捕获到*= ^= |= != ~= = 即属性选择器在css选择器的具体实现
+        //[ xxx ~= \x 或者 除了 \
+        "*([*^$|!~]?=)" + whitespace +
+        // "Attribute values must be CSS identifiers [capture 5] or strings [capture 3 or capture 4]"
+        //译 : ↑ “属性值必须是CSS标识符[capture 5]或字符串[capture 3或capture 4]”
+        "*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|(" + identifier + "))|)" + whitespace +
+        "*\\]";
+    console.log(attributes);
+
+
+    console.log("1111111111111111111111111111");
+    console.log(/([+-]|)/g.test(""));
+
+    console.log(2);
+    var rattributeQuotes = new RegExp( "=" + whitespace + "*([^\\]'\"]*?)" + whitespace + "*\\]", "g" );
+//    /=[\x20\t\r\n\f]*([^\]'"]*?)[\x20\t\r\n\f]*\]/g
+    console.log(rattributeQuotes.exec("=aaa]"));
+    console.log("=aaa]");
+    console.log(rattributeQuotes);
+    console.log(3);
+    var rtrim = new RegExp( "^" + whitespace + "+|((?:^|[^\\\\])(?:\\\\.)*)" + whitespace + "+$", "g" );
+    console.log(rtrim);
+    /^[\x20\t\r\n\f]+|((?:^|[^\\])(?:\\.)*)[\x20\t\r\n\f]+$/g;
+    var reg_20171113 = /^ |"/;
+    console.log(reg_20171113.test(""));
+    console.log(2017-11-14);
+    var risSimple = /^.[^:#\[\.,]*$/;
+    console.log(risSimple);
+    console.log(risSimple.test("#test"));
+    console.log(2017-11-14/13.50);
+    var rquickExpr = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]+))$/;
+    console.log(rquickExpr.exec("<p href='#'>"));
+    console.log("测试数组调用正则表达式的效果");
+    //对数组进行正则匹配的时候是将数组调用了toString方法后再进行正则匹配的
+    var arrTest = ["1", "2"];
+    var RegExpTest = /1,2/ig;
+    console.log(RegExpTest.test(arrTest));
+</script>
+</body>
+</html>

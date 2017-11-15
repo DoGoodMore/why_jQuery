@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<script>
+    var testObj = {
+        a : 111,
+        get : function () {
+            console.log(1111);
+            return this.a
+        }
+    }
+    console.log(testObj);
+    Object.defineProperty(testObj, "b", {
+        get : function (val) {
+            console.log(val);
+            return "111"
+        },
+        set : function (val) {
+            console.log(val);
+        }
+    })
+    console.log(testObj.b = "aa");
+    console.log(testObj.b);
+</script>
+</body>
+</html>

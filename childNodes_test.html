@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var testNode = document.childNodes;
+    console.log(typeof testNode);
+    console.log(testNode);
+    [].push.call(testNode, 1111);
+    console.log(testNode);
+    testNode = [].slice.call(testNode);
+    console.log(testNode);
+</script>
+</body>
+</html>

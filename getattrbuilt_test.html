@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="test"></div>
+<input type="text" id="type">
+<script>
+    var testNode = document.getElementById("test");
+    testNode.className = "test";
+    testNode.testAttr = "testTest";
+    console.log(testNode.getAttribute("className"));
+    console.log(testNode.getAttribute("testAttr"));
+    console.log(testNode.testAttr);
+    var i;
+    for(i in testNode){
+        console.log("i=" + i, testNode[i]);
+    }
+
+
+    console.log("----------------------");
+    var typeNode = document.getElementById("type");
+    console.log(typeNode.getAttribute("type", 1))
+    console.log(typeNode.getAttribute("type", 2))
+</script>
+</body>
+</html>

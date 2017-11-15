@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<ul>
+    <li></li>
+    <li></li>
+    <li>
+        <ul id="test_wrap">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <ul>
+                <li id="test"></li>
+            </ul>
+        </ul>
+    </li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+<script src="jquery-3.2.1.js"></script>
+<script>
+    console.log($("#test").closest(["ul", "body"]));
+</script>
+</body>
+</html>
