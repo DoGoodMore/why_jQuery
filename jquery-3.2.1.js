@@ -3726,20 +3726,23 @@ jQuery.escapeSelector = Sizzle.escape;
 
 
 
-
-var dir = function( elem, dir, until ) {
-	var matched = [],
-		truncate = until !== undefined;
-
+//该函数用于以当前节点为原点获取到传入参数的节点的集合
+var dir = function( elem, dir, until ) {//该函数接受三个有效参数 1.节点 2.获取的规则 如所有前面的兄弟 后面的兄弟等等
+	//3.获取到什么条件为止 可以是一个判断条件 也可以是一个节点
+	var matched = [],//声明获取结果的空数组 为将其保存在变量matched中
+		//如果没有传入终止条件那么truncate的值就是为false
+		truncate = until !== undefined;//判断是否有传入条件 并将其是否有传入的判定布尔值保存在变量truncate中
+ 	//不断将elem指向为他的获取规则的节点 比如不断指向其前一个兄弟节点 直到其指向为空或是指向为document对象
 	while ( ( elem = elem[ dir ] ) && elem.nodeType !== 9 ) {
-		if ( elem.nodeType === 1 ) {
+		if ( elem.nodeType === 1 ) {//如果当前的节点的nodeType的值为元素节点
+            //对终止条件进行判定 如果是一个节点 那么将当前节点封装成jQuery对象后和终止节点进行比较 查看两个节点是否是同一个节点
 			if ( truncate && jQuery( elem ).is( until ) ) {
-				break;
+				break;//如果符合了终止条件 那么终止循环
 			}
-			matched.push( elem );
+			matched.push( elem );//将符合条件的节点添加到结果数组中
 		}
 	}
-	return matched;
+	return matched;//最后将筛选之后的结果数组返回
 };
 
 //定义siblins方法
@@ -3761,7 +3764,8 @@ var rneedsContext = jQuery.expr.match.needsContext;
 
 
 function nodeName( elem, name ) {//定义nodeName方法 该方法可以接受两个有效参数 1.节点 2.节点名称
-	//用于判定节点的nodeName是否不区分大小写
+	//该函数用于判定传入节点是否为传入的name参数
+	//即当前节点的标签名是否是name参数
   return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
 
 };
@@ -4098,7 +4102,7 @@ jQuery.fn.extend( {//想jQuery中添加方法
 	//closest会首先检查当前的元素是否匹配 如果匹配则直接返回元素本身 如果不匹配则向上查找父元素 一层一层网上找
 		//知道找到匹配的元素, 如果一直到最后什么都没找到那么就返回一个空的jQuery对象
 	closest: function( selectors, context ) {//该函数接收两个有效参数 1.selectors 选择器字串 2.context 上下文对象
-		var cur,
+		var cur,//TODO : 待定
 			i = 0,
 			l = this.length,//获取到调用closest函数的数组对象的长度
 			matched = [],
@@ -4125,7 +4129,7 @@ jQuery.fn.extend( {//想jQuery中添加方法
 						//且判定当前等级的cur节点是否能被selector选择器字串选中,
 						// 如果是数组的话也可以 因为jQuery.find.matchesSelector有做正则匹配 即做了隐式的类型转换
 					if ( cur.nodeType < 11 && ( targets ?
-						targets.index( cur ) > -1 :
+						targets.index( cur ) > -1 ://TODO : 待考擦
 
 						// Don't pass non-elements to Sizzle
 							//译 : ↑ 不要将非元素传递给Sizzle
@@ -4138,125 +4142,214 @@ jQuery.fn.extend( {//想jQuery中添加方法
 				}
 			}
 		}
-
+		//对结果数组的长度进行判定 如果其内部元素大于1将结果数组去重后推入栈中并返回
+		//如果结果数组只有一个那么就直接将该数组推入栈中返回
 		return this.pushStack( matched.length > 1 ? jQuery.uniqueSort( matched ) : matched );
 	},
 
 	// Determine the position of an element within the set
-	index: function( elem ) {
+	//译 : ↑ 确定集合内元素的位置
+	//在jQuery上添加index方法 即 $.index方法
+	//该方法主要用于搜索匹配元素 并返回相应元素的索引值 从0开始计数
+	//如果不给.index()方法传递参数 那么返回值就是这个jQuery对象集合中第一个元素相对于其同辈元素的位置
+	//如果参数是一个选择器 那么返回值就是原先元素相对于选择器匹配元素中的位置 如果找不到匹配的元素那么就返回-1
+	index: function( elem ) {//该方法接受一个有效参数 即要获取元素下标的对应的元素
 
 		// No argument, return index in parent
-		if ( !elem ) {
+		//译 : ↑ 没有参数，在父级返回索引
+		if ( !elem ) {//如果没有传入对应的元素
+			//那么就将返回调用节点在其父节点中的位置
+			//而确认当前节点在其父节点中的位置 即获取到该节点在其兄弟节点中的位置
+			//prevAll 获取都所有的前面的兄弟节点
 			return ( this[ 0 ] && this[ 0 ].parentNode ) ? this.first().prevAll().length : -1;
 		}
 
-		// Index in selector
-		if ( typeof elem === "string" ) {
+		// Index in selector 译 : 选择器中的索引
+		if ( typeof elem === "string" ) {//如果传入的获取参数 是一个字串的话
+            //那么就先调用jQuery核心函数将其转换为可使用的dom节点 然后在调用其indexOf方法
+			//注 此处是将转换后的字串对应的dom元素作为第一个参数
+			//所以 如果传入的是一个选择器字串的话那么返回的是调用该方法的数组对象的第一个元素相对于传入index参数的位置
 			return indexOf.call( jQuery( elem ), this[ 0 ] );
 		}
 
 		// Locate the position of the desired element
+		//译 : ↑ 找到所需元素的位置
+		//如果以上的情况都不符合当前的需求那么就调用原生的indexOf方法
+		//将调用该方法的对象作为第一个参数 将传入index方法的参数作为第二个参数
+			//先判定传入index方法中的参数是否是一个jQuery对象 如果是 那么直接取其第一个元素 如果不是那么就将该参数直接传入
+		//将indexOf方法调用的结果返回
 		return indexOf.call( this,
 
 			// If it receives a jQuery object, the first element is used
+			//译 :↑ 如果它收到一个jQuery对象，则使用第一个元素
 			elem.jquery ? elem[ 0 ] : elem
 		);
 	},
 
-	add: function( selector, context ) {
-		return this.pushStack(
-			jQuery.uniqueSort(
+	//添加add方法 即$.add
+	// 该方法用于向一个jQuery对象中新添加另外的DOM元素 并将添加后的数组进行去重后返回
+	add: function( selector, context ) {//该方法接受两个有效参数 1.选择器字串或是节点等等 2.上下文对象
+		return this.pushStack(//将其推入栈中用.end可返回
+			jQuery.uniqueSort(//调用$.uniqueSort方法对返回数组进行去重
+				//$.get方法用于获取到指定下标的元素 如果没有传入参数那么就将调用该方法的数组转换为数组后并返回
+				//调用jQuery.merge方法将调用add方法的数组 和通过传入的选择器字串获取到的元素合并
 				jQuery.merge( this.get(), jQuery( selector, context ) )
 			)
 		);
 	},
 
-	addBack: function( selector ) {
+	//添加addBack方法 即$.addBack
+	//该方法用于添加堆栈中元素集合到当前集合 一个选择性过滤的过滤选择器
+	addBack: function( selector ) {//该方法接受一个有效参数 即1.选择器字串 可以是选择器字符串也可以是一个节点等等
+		//1.首先对传入的选择器字串进行判定 判定其是否有传 如果没有传入 那么就直接将当前栈中的节点添加到调用addBack的数组对象中
+		//2.如果有传入参数 那么就对堆栈中的节点调用filter方法 并将选择器字串传入 并将筛选之后的数组对象合并到调用addBack的数组对象中
 		return this.add( selector == null ?
 			this.prevObject : this.prevObject.filter( selector )
 		);
 	}
 } );
 
-function sibling( cur, dir ) {
+//定义sibling方法
+function sibling( cur, dir ) {//该方法可以接受两个有效参数 1.对象节点 2.筛选的标准
+	//将变量cur指向为筛选条件的对应元素 且对cur所指向的节点的nodeType进行判定
+	//即将cur指向为传入节点的兄弟节点 且对其兄弟节点的类型进行判定要求其必须是一个元素节点
+	//如果不是元素节点那么继续循环 如果是元素节点 跳出循环并将该节点返回
 	while ( ( cur = cur[ dir ] ) && cur.nodeType !== 1 ) {}
 	return cur;
 }
 
-jQuery.each( {
-	parent: function( elem ) {
-		var parent = elem.parentNode;
+jQuery.each( {//调用$.each方法 对传入的对象进行遍历
+	parent: function( elem ) {//定义$.parent方法
+		//该方法用于 取得一个包含着所有匹配元素的唯一父元素的集合
+		var parent = elem.parentNode;//获取到传入节点的父节点
+		//判定其是否为fragment文档类型 如果是fragment类型的节点那么返回null
 		return parent && parent.nodeType !== 11 ? parent : null;
 	},
-	parents: function( elem ) {
+	parents: function( elem ) {//定义$.parents方法 接收一个有效参数 即传入的节点
+		//该方法用于取得一个包含着所有匹配元素的祖先元素的元素集合(不包含根元素) 也可以通过一个可选的表达式进行筛选
+		//其内部调用dir方法 将外部传入的节点传入, 并将筛选标准设置为parentNode 即父节点
+		//改方法返回的是传入节点所有的父节点 会一直到html根标签
 		return dir( elem, "parentNode" );
 	},
-	parentsUntil: function( elem, i, until ) {
+	parentsUntil: function( elem, i, until ) {//定义$.parentsUntil内部调度函数
+		//$.parentsUntil用于查找当前元素的所有父辈元素 直到遇到匹配的那个元素为止
+		//如果提供的jQuery代表了一组DOM元素 parentsUntil方法也能让我们找遍所有元素的祖先元素 知道遇到了一个跟提供的参数匹配的元素的时候
+		//才会停下来 这个返回的jQuery对象里包含了下面所有找到的父辈元素 但不包括那个选择器匹配的元素
+		//内部调用的也是dir方法 将外部传入的节点作为第一个参数传入  查找规则为父节点即parentNode 并将终止条件也传入(如果有)
 		return dir( elem, "parentNode", until );
 	},
-	next: function( elem ) {
+	next: function( elem ) {//定义$.next内部调度函数
+		//$.next方法 用于取得一个包含匹配元素集合的紧靠着当前元素的jQuery对象
+		//内部调用的是sibling方法 将当前节点作为第一个参数传入 筛选标准为nextSibling即下一个兄弟节点
 		return sibling( elem, "nextSibling" );
 	},
-	prev: function( elem ) {
+	prev: function( elem ) {//定义$.prev内部调度函数
+		//$.prev方法用于与next刚好相反 是用于获取上一个兄弟节点
+		//其内部调用的是sibling函数 将当前节点作为第一个参数传入 筛选标准为previousSibling 即上一个兄弟节点
+		//sibling( elem, "previousSibling" )会返回当前节点的上一个兄弟节点
 		return sibling( elem, "previousSibling" );
 	},
-	nextAll: function( elem ) {
+	nextAll: function( elem ) {//定义$.nextAll内部调度函数
+		//$.nextAll方法用于获取到当前节点后面所有的兄弟节点
+		//其内部调用的是dir方法 将当前节点作为第一个参数传入 并将筛选的标准传为nextSibling即 后面的兄弟节点
+		//当前获取到的是当前节点后面的所有的兄弟节点
 		return dir( elem, "nextSibling" );
 	},
-	prevAll: function( elem ) {
+	prevAll: function( elem ) {//定义$.prevAll内部调度函数
+		//其内部调用的是dir方法 将当前节点作为第一个参数传入 并将筛选的标准设置为previousSibling 即 前面的兄弟节点
+		//当前返回的是当前节点对应的前面的所有的兄弟节点
 		return dir( elem, "previousSibling" );
 	},
-	nextUntil: function( elem, i, until ) {
+	nextUntil: function( elem, i, until ) {//定义$.nextUntil方法内部调度函数
+		//其内部调用的dir函数 将当前节点作为第一个参数传入 并将筛选标准传入为nextSibling 即后面所有的兄弟节点
+		//将终止条件作为第三个参数传入(如果有)
+		//当前返回的结果是当前节点的后面所有的节点 直到终止条件处的 如果没有终止条件或者其值为undefined那么就是当前节点后面所有的兄弟节点
 		return dir( elem, "nextSibling", until );
 	},
-	prevUntil: function( elem, i, until ) {
+	prevUntil: function( elem, i, until ) {//定义$.prevUntil方法内部调度函数
+		//其内部调用的是dir函数 将当前节点作为第一个参数传入
+		//并将其筛选标准设置为previousSibling 即 前面所有的兄弟节点
+		//并将终止条件作为第三个参数传入
+		//同nextUntil 当前返回的是当前节点前面所有的兄弟节点 从当前节点一直到终止条件的那个节点位置
+		// 如果终止条件不存在那就是当前节点前面所有的兄弟节点
 		return dir( elem, "previousSibling", until );
 	},
-	siblings: function( elem ) {
+	siblings: function( elem ) {//定义$.siblings方法内部调度的函数
+		//siblings用于返回当前元素所有的兄弟元素
+		//其内部调用的是siblings方法
+		//将当前节点的父节点的第一个子节点作为第一个参数传入
+		//并将当前节点作为第二个参数传入
+		//当前返回的是当前节点的所有的兄弟节点(元素节点)
 		return siblings( ( elem.parentNode || {} ).firstChild, elem );
 	},
-	children: function( elem ) {
+	children: function( elem ) {//定义$.children内部调度函数
+		//$.children函数用于获取一个节点所有的子节点(元素节点)
+		//当前返回的是当前节点所有的子节点(元素节点)
 		return siblings( elem.firstChild );
 	},
-	contents: function( elem ) {
+	contents: function( elem ) {//定义$.content内部调度函数
+		//$.content方法用于查找当前节点的所有子节点(包含子节点)
+		//首先判定当前节点是否是iframe标签
+		//如果当前的节点是iframe节点 那么就返回当前节点的contentDocument属性
         if ( nodeName( elem, "iframe" ) ) {
             return elem.contentDocument;
         }
 
         // Support: IE 9 - 11 only, iOS 7 only, Android Browser <=4.3 only
+		//译 : ↑ 支持：仅限IE 9 - 11，仅限iOS 7，仅限Android Browser <= 4.3
         // Treat the template element as a regular one in browsers that
+		//译 : ↑ 将模板元素视为浏览器中的常规模板元素
         // don't support it.
+		//译 : ↑ 不支持它。
+		//判定当前的节点是否是template标签
         if ( nodeName( elem, "template" ) ) {
+        	//如果当前的节点是template标签 那么就将elem变量指向为其content属性 如果没有那么就按照常规的标签进行解析
             elem = elem.content || elem;
         }
-
+		//将当前节点的所有的子节点合并到一个数组中并该数组
         return jQuery.merge( [], elem.childNodes );
 	}
-}, function( name, fn ) {
-	jQuery.fn[ name ] = function( until, selector ) {
+}, function( name, fn ) {//对上诉对象中的每个属性执行该函数 并将上述的属性名作为name字段传入 将属性名对应的函数作为fn参数传入到函数中
+	//将上述对象中的每个属性的属性名 作为jQuery原型的方法定义 原型上的属性名同上述对象的属性名
+	jQuery.fn[ name ] = function( until, selector ) {//定义每个属性对应的函数
+        //对调用对应方法的数组对象进行遍历并对每个元素调用对应的函数
+		//比如说某个jQuery对象调用.parent方法  那么就对其调用map方法 即遍历该数组对象并对每个元素调用对应的函数
 		var matched = jQuery.map( this, fn, until );
 
-		if ( name.slice( -5 ) !== "Until" ) {
+		//即如果不是以 ....为止 那么就只保留符合selector中的对应的节点
+		if ( name.slice( -5 ) !== "Until" ) {//判定属性名不能以Until结尾 如 nextUntil 等
+			//那么就将selector的指向改为until 即 将选择器字串 的值或是内存地址改为until
+			//是为了接下来调用filter TODO: 待定
 			selector = until;
 		}
 
 		if ( selector && typeof selector === "string" ) {
+			//对第二个参数进行判定 判定其如果存在且是一个字符串
+			//那么就对结果数组进行过滤 将符合过滤之后的数组重新制定给变量matched
 			matched = jQuery.filter( selector, matched );
 		}
 
-		if ( this.length > 1 ) {
-
+		if ( this.length > 1 ) {//对调用该方法的数组对象的长度 如果其中的元素大于一个
+		//那么需要对结果数组进行去重处理
 			// Remove duplicates
+			//译 : ↑ 删除重复项
+			//如果该方法不是children, contents, next, prev 那么就需要对其进行去重处理
+			//因为以上的几种方法不可能会有重复的元素 每一个节点的子节点 或是下一个兄弟节点 上一个兄弟节点 应该是不会重复的
 			if ( !guaranteedUnique[ name ] ) {
+				//调用jQuery.uniqueSort方法对结果数组进行去重处理
 				jQuery.uniqueSort( matched );
 			}
 
 			// Reverse order for parents* and prev-derivatives
+			//译 :↑ 父母*和prev衍生品的反向订单
+			// var rparentsprev = /^(?:parents|prev(?:Until|All))/,
+			//因为在进行去重时  是按照范围从大到小的进行排序了 所以我们需要将其翻转顺序以达到从近到远
 			if ( rparentsprev.test( name ) ) {
 				matched.reverse();
 			}
 		}
 
+		//将结果数组对象推入栈中后返回
 		return this.pushStack( matched );
 	};
 } );
@@ -4265,35 +4358,46 @@ var rnothtmlwhite = ( /[^\x20\t\r\n\f]+/g );
 
 
 // Convert String-formatted options into Object-formatted ones
-function createOptions( options ) {
-	var object = {};
+	//译 : ↑ 将字符串格式的选项转换为对象格式的选项
+//定义createOptions方法
+function createOptions( options ) {//该方法接受一个有效参数  options 即 目标字符串
+	//该方法根据正则表达式将一个字符串通过空格分隔成几个单词 例如hello world 分隔成["hello", "world"]
+	var object = {};//声明一个对象
+	//对解析之后的字串的数组进行遍历  如果没有解析或是为空串 那么将目标改为一个为空的数组
+	//并对每个元素调用函数 _ = 下标 flag = 对应的解析出来的字串
 	jQuery.each( options.match( rnothtmlwhite ) || [], function( _, flag ) {
-		object[ flag ] = true;
+		//将对象的属性名设置为每个解析出来的数组的元素
+		object[ flag ] = true;//并将其值设置为布尔值true
 	} );
-	return object;
+	return object;//将设置好属性的对象返回
 }
 
 /*
  * Create a callback list using the following parameters:
+ * 译 : ↑ 使用以下参数创建回调列表：
  *
  *	options: an optional list of space-separated options that will change how
  *			the callback list behaves or a more traditional option object
+ *	译 : ↑ options :一个空格分隔选项的可选列表，这将改变回调列表的行为或更传统的选项对象
  *
  * By default a callback list will act like an event callback list and can be
  * "fired" multiple times.
+ * 译 :↑ 默认情况下，回调列表的行为就像一个事件回调列表，可以多次被“fired”。 fired : 解雇
  *
- * Possible options:
+ * Possible options: 译 : 可选的参数 :
  *
  *	once:			will ensure the callback list can only be fired once (like a Deferred)
+ *	译 : once :将确保回调列表只能被触发一次（如延期）
  *
  *	memory:			will keep track of previous values and will call any callback added
  *					after the list has been fired right away with the latest "memorized"
  *					values (like a Deferred)
+ *	memory : 译 : ↑ 将跟踪以前的值，并将调用任何回调添加列表后，立即用最新的“memorized”值（如延期）memorized : 记忆
  *
  *	unique:			will ensure a callback can only be added once (no duplicate in the list)
- *
+ *	unique : 译 ↑	将确保回调只能添加一次（在列表中不重复）
  *	stopOnFalse:	interrupt callings when a callback returns false
- *
+ *	stopOnFalse : 译 : 当回调返回false时中断调用
  */
 jQuery.Callbacks = function( options ) {
 
@@ -10345,7 +10449,7 @@ jQuery.extend( {
 	}
 } );
 
-jQuery.each( [ "get", "post" ], function( i, method ) {
+jQuery.each( [ "get", "post" ], function( i, method ) {//4191
 	jQuery[ method ] = function( url, data, callback, type ) {
 
 		// Shift arguments if data argument was omitted
